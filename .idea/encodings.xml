@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="GBK">
+    <file url="file://$PROJECT_DIR$" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Core/Src/freertos.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Core/Src/stm32f4xx_it.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Core/Src/usart.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/User_Core/Inc/bsp_esp8266.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/User_Core/Src/Blue.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/User_Core/Src/bsp_esp8266.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/User_Core/Src/can_rec.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/User_Core/Src/motor_task.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/User_Core/Src/uart_slove.c" charset="GBK" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>
