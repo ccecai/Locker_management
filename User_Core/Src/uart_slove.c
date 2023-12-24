@@ -4,7 +4,6 @@
 #include "uart_slove.h"
 #include "Password_judge.h"
 
-int8_t Back_flag = 0;
 uint8_t receive_data[RECEIVE_DATA_SIZE]={0};
 int8_t member[16] = {0};
 int8_t open_locker[16] = {0};
@@ -18,8 +17,7 @@ int count = 0;
 int current_user;
 int current_locker;
 uint8_t init_flag = 1;
-uint8_t success_flag = 0,fail_flag = 0;
-
+uint8_t book_flag = 0;
 uint8_t RegisterFail_flag = 0,RegisterSuccess_flag = 0;
 uint8_t PasswordChange_flag = 0,PasswordInput_flag = 0,PasswordChangeFail_flag = 0,PasswordInputfail_flag = 0;
 uint8_t BookFail_flag = 0,BookSuccess_flag = 0,Charge_flag = 0,flag = 0,close_flag = 0;
@@ -31,6 +29,7 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
 
         if(data[0] == 0xaa && data[1] == 0xab && data[2] == 0xac) //将机构复位
         {
+            current_locker = 0;
             AllMotor_Give(0,0,0,0);
         }
 
@@ -104,7 +103,6 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
                     if(strcmp((char *)SCREEN[i].Username,(char *)Sc->Username) < 0 || strcmp((char *)SCREEN[i].Username,(char *)Sc->Username) > 0)
                     {
                         PasswordInput_flag = 1;
-
                     }
                     else
                     {
@@ -114,8 +112,6 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
                     }
 //
                 }
-//                printf7("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n",SCREEN[1].Username[0],SCREEN[1].Username[1],SCREEN[1].Username[2],SCREEN[1].Username[3],SCREEN[1].Username[4],SCREEN[1].Username[5],SCREEN[1].Username[6],SCREEN[1].Password[0],SCREEN[1].Password[1],SCREEN[1].Password[2],SCREEN[1].Password[3],SCREEN[1].Password[4],SCREEN[1].Username[5],SCREEN[1].Username[6]);
-
                 count = 0;
                 Receive_Start++;
             }
@@ -131,7 +127,9 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
                     SCREEN[Receive_Start].Username[username_count-1] = data[username_count];
                     username_count++;
                 }
+
                 username_count++;
+
                 while(data[username_count] != 0xfd)
                 {
                     SCREEN[Receive_Start].Password[password_count-1] = data[username_count];
@@ -143,10 +141,13 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
                 {
                     if(strcmp((char *)SCREEN[i].Username,(char *)SCREEN[Receive_Start].Username) == 0)
                     {
+                        init_flag = 0;
+                        PasswordChangeFail_flag = 0;
                         PasswordChange_flag = 1;
-                        memset(SCREEN[i].Password,0,sizeof SCREEN[i].Password);
-                        memset(SCREEN[i].Username,0,sizeof SCREEN[i].Username);
-                        Receive_Start++;
+                        strcpy((char *)SCREEN[i].Password,(char *)SCREEN[Receive_Start].Password);
+//                        memset(SCREEN[i].Password,0,sizeof SCREEN[i].Password);
+//                        memset(SCREEN[i].Username,0,sizeof SCREEN[i].Username);
+//                        Receive_Start++;
                         break;
                     }
                     else if(strcmp((char *)SCREEN[i].Username,(char *)SCREEN[Receive_Start].Username) > 0 || strcmp((char *)SCREEN[i].Username,(char *)SCREEN[Receive_Start].Username) < 0)
@@ -193,10 +194,10 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
                     if(member[i] == 1)
                     {
                         locker_count++;//用来计数有几个柜子
-                        current_locker = i+1;//记录当前打开柜子的柜号
+                        current_locker = i + 1;//记录当前打开柜子的柜号
                         Used[i] = 1;//记录当前登录用户
                         open_locker[i] = 1;//记录当前打开柜号的标志量
-                        Booking[i] = 0;//预约与选择标志量清零
+                        Booking[i] = 0;
                         member[i] = 0;
                         SCREEN[current_user].judge_count[i]++;//二维码收费所用
                     }
@@ -221,15 +222,12 @@ int8_t Screen_slove(uint8_t *data, Screen *Sc)
         }
         else if(data[0] == 0x1a && data[1] == 0xff && data[2] == 0xfe)//关闭当前打开的柜子
         {
+//            AllMotor_Give(current_angle[0] + ((current_angle[1] - current_angle[0]) / 2),current_angle[1] - ((current_angle[1] - current_angle[0]) / 2),current_angle[2] - ((current_angle[2] - current_angle[3]) / 2),current_angle[3] + ((current_angle[2] - current_angle[3]) / 2));
+//            osDelay(5000);
+            current_locker = 0;
             AllMotor_Give(0,0,0,0);
         }
-//        else if(data[0] == 0xdd && data[1] == 0xdd && data[2] == 0xdd && data[3] == 0xdf) //原有进入二维码收款界面的判断串口信息
-//        {
-//
-//
-//            Judge_flag = 1;
-//        }
-        else if(data[0] == 0xaa && data[2] == 0xfe)//对柜子的打开进行方向控制
+        else if(data[0] == 0xaa && data[2] == 0xfd)//对柜子的打开进行方向控制
         {
             if(++count == 3)
             {

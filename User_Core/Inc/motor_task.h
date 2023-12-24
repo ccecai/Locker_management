@@ -9,8 +9,9 @@
 
 extern float Angle_Output[4];
 extern int8_t locker_count;
+extern float current_angle[4];
 
-#define OneLocker_Angle 126.5
+#define OneLocker_Angle 128.0
 
 void Motor_Slove(uint8_t count);
 float Motor_Change(float MotorAngle);

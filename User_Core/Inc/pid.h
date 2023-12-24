@@ -4,7 +4,7 @@
 #include <stdint-gcc.h>
 
 #define One_Circle 8192
-#define base_speed 500
+#define base_speed 750
 
 /**
   * @brief  PID参数结构体定义

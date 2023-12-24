@@ -61,8 +61,8 @@ void MX_UART7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN UART7_Init 2 */
-    __HAL_UART_ENABLE_IT(&huart7,UART_IT_IDLE);//???????6 ???н????ж?
-    HAL_UART_Receive_DMA(&huart7,(uint8_t *)&BlueTooth_data,RECEIVE_DATA_SIZE);//??????6 DMA????
+    __HAL_UART_ENABLE_IT(&huart7,UART_IT_IDLE);//启用串口5 空闲接受中断
+    HAL_UART_Receive_DMA(&huart7,(uint8_t *)&ESPS,50);//使能串口5 DMA接受
   /* USER CODE END UART7_Init 2 */
 
 }
@@ -78,7 +78,7 @@ void MX_UART8_Init(void)
 
   /* USER CODE END UART8_Init 1 */
   huart8.Instance = UART8;
-  huart8.Init.BaudRate = 1200;
+  huart8.Init.BaudRate = 115200;
   huart8.Init.WordLength = UART_WORDLENGTH_8B;
   huart8.Init.StopBits = UART_STOPBITS_1;
   huart8.Init.Parity = UART_PARITY_NONE;

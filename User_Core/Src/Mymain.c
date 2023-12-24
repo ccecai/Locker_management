@@ -2,8 +2,8 @@
 // Created by 1 on 2023-11-02.
 //
 #include "Mymain.h"
-#include "Password_judge.h"
-#include "stm32f4xx_hal_uart.h"
+
+int8_t Judge = 0;
 
 void Mymain_Init(void)
 {
@@ -14,4 +14,11 @@ void Mymain_Init(void)
     RetargetInit(&huart7);
     RetargetInit(&huart8);
     HAL_TIM_PWM_Start(&htim12,TIM_CHANNEL_1);
+
+//    do
+//    {
+//        Judge = ESP_Init();
+////        printf3("error code:%d\r\n",Judge);
+//        osDelay(20);
+//    }while(Judge);  //连接华为云直到成功
 }

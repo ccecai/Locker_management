@@ -121,7 +121,7 @@ void MX_FREERTOS_Init(void) {
   PID_OutputTaskHandle = osThreadCreate(osThread(PID_OutputTask), NULL);
 
   /* definition and creation of KeyTask */
-  osThreadDef(KeyTask, Key, osPriorityNormal, 0, 128);
+  osThreadDef(KeyTask, Key, osPriorityNormal, 0, 256);
   KeyTaskHandle = osThreadCreate(osThread(KeyTask), NULL);
 
   /* definition and creation of While */
@@ -168,20 +168,18 @@ void StartDebugTask(void const * argument)
     
     BUZZER_OFF;
 
+//    printf7("1 free\n");
   /* Infinite loop */
   for(;;)
   {
       LED1_Flash;
       LED2_Flash;
       WaterLED();
+//      printf3("%d,%d,%d,%d,%d,%d,%d\r\n",SCREEN[1].Username[0],SCREEN[1].Username[1],SCREEN[1].Username[2],SCREEN[1].Username[3],SCREEN[1].Username[4],SCREEN[1].Username[5],SCREEN[1].Username[6]);
+//      osDelay(10);
+//      printf3("%d,%d,%d,%d,%d,%d,%d\r\n",SCREEN[2].Username[0],SCREEN[2].Username[1],SCREEN[2].Username[2],SCREEN[2].Username[3],SCREEN[2].Username[4],SCREEN[2].Username[5],SCREEN[2].Username[6]);
 
-//      printf8("第2号柜目前处于空闲\r\n");
-//      printf8("第3号柜目前处于空闲\r\n");
-//      printf8("第4号柜目前处于空闲\r\n");
-//      printf8("第5号柜目前处于空闲\r\n");
-//      printf8("第6号柜目前处于空闲\r\n");
-
-//      printf7("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n",SCREEN[0].Username[0],SCREEN[0].Username[1],SCREEN[0].Username[2],SCREEN[0].Username[3],SCREEN[0].Username[4],SCREEN[0].Password[0],SCREEN[0].Password[1],SCREEN[0].Password[2],SCREEN[0].Password[3],SCREEN[0].Password[4]);
+//      printf7("1\r\n");
       osDelay(70);
   }
   /* USER CODE END StartDebugTask */
@@ -226,8 +224,7 @@ void PID_Output(void const * argument)
      *              id3
      *           |
      *           \/
-     *           
-     *      AllMotor_Give(+ 0,- 0,- 0,+ 0);
+     *
      *
      */
 
@@ -247,7 +244,7 @@ void PID_Output(void const * argument)
       Speed2 = Output_Limit(Speed2);
       Speed3 = Output_Limit(Speed3);
       Speed4 = Output_Limit(Speed4);
-
+//      printf3("1\n");
       Speed1_OUT = (int16_t) PID_realise(&MOTOR2006_S[0],Speed1,motor_info[0].speed,M2006_CURRENT_MAX);
       Speed2_OUT = (int16_t) PID_realise(&MOTOR2006_S[1],Speed2,motor_info[1].speed,M2006_CURRENT_MAX);
       Speed3_OUT = (int16_t) PID_realise(&MOTOR2006_S[2],Speed3,motor_info[2].speed,M2006_CURRENT_MAX);
@@ -292,7 +289,9 @@ void WhileTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-      UR_Init();
+      if(init_flag == 1)
+          UR_Init();
+
     osDelay(0);
   }
   /* USER CODE END WhileTask */
@@ -332,7 +331,8 @@ void BlueTeethTask(void const * argument)
   for(;;)
   {
       Blue_Judge();
-    osDelay(10000);
+      esp8266_send();
+    osDelay(5000);
   }
   /* USER CODE END BlueTeethTask */
 }

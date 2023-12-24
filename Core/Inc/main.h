@@ -45,6 +45,7 @@ extern "C" {
 #include "uart_slove.h"
 #include "Password_judge.h"
 #include "Blue.h"
+#include "ESP8266.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

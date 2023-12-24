@@ -5,9 +5,7 @@
 
 char str[16][30] = {0};
 char cmd_1[20] = {0},cmd_2[20] = {0},cmd_3[20] = {0};
-char reply_1[20] = {0},reply_2[20] = {0};
 int8_t BlueTooth_data[20] = {0};
-
 
 void Blue_Judge(void)
 {

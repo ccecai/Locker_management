@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "uart_slove.h"
 #include "usart.h"
+#include "ESP8266.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -359,6 +360,7 @@ void USART6_IRQHandler(void)
         Screen_slove((uint8_t *)&receive_data,&SCREEN[Receive_Start]);
     }
 
+
   /* USER CODE END USART6_IRQn 0 */
   HAL_UART_IRQHandler(&huart6);
   /* USER CODE BEGIN USART6_IRQn 1 */
@@ -373,14 +375,23 @@ void USART6_IRQHandler(void)
 void UART7_IRQHandler(void)
 {
   /* USER CODE BEGIN UART7_IRQn 0 */
-    if(__HAL_UART_GET_FLAG(&huart7,UART_FLAG_IDLE)==SET)    //串口2
+    uint32_t tmp_flag = 0;
+    uint32_t temp;
+    uint16_t rx_len;
+    tmp_flag =__HAL_UART_GET_FLAG(&huart7,UART_FLAG_IDLE); //获取IDLE标志位
+    if((tmp_flag != RESET))//idle标志被置位
     {
-        __HAL_UART_CLEAR_IDLEFLAG(&huart7);//清除空闲中断接受标志
-        HAL_UART_DMAStop(&huart7);//关闭DMA接受
-
-        HAL_UART_Receive_DMA(&huart7,(uint8_t *)&BlueTooth_data,RECEIVE_DATA_SIZE);//使能串口2 DMA接受
-
-    }
+//        printf3("1\r\n");
+        __HAL_UART_CLEAR_IDLEFLAG(&huart7);//清除标志位
+        temp = huart7.Instance->SR;  //清除状态寄存器SR,读取SR寄存器可以实现清除SR寄存器的功能
+        temp = huart7.Instance->DR; //读取数据寄存器中的数据
+        HAL_UART_DMAStop(&huart7); //
+        temp = hdma_uart7_rx.Instance->NDTR;// 获取DMA中未传输的数据个数，NDTR寄存器分析见下面
+        rx_len =  50 - temp; //总计数减去未传输的数据个数，得到已经接收的数据个数
+        Esp_Judge();
+//        printf7("%d,%d,%d,%d,%d\r\n",ESPS[0],ESPS[1],ESPS[2],ESPS[3],ESPS[4]);
+    }//https://www.cnblogs.com/zjx123/p/11949052.html->该知识网址
+    HAL_UART_Receive_DMA(&huart7,(uint8_t *)&ESPS,50);//使能串口5 DMA接受
   /* USER CODE END UART7_IRQn 0 */
   HAL_UART_IRQHandler(&huart7);
   /* USER CODE BEGIN UART7_IRQn 1 */

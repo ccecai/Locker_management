@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #define RECEIVE_DATA_SIZE 1000
-#define MAX_SIZE 1000
+#define MAX_SIZE 900
 
 typedef struct {
 
@@ -34,6 +34,7 @@ extern uint8_t PasswordChange_flag,PasswordInput_flag;
 extern uint8_t BookFail_flag,BookSuccess_flag,PasswordChangeFail_flag,PasswordInputfail_flag;
 extern uint8_t Buzzer_flag,Charge_flag,flag,close_flag;
 extern uint8_t init_flag;
+extern int current_locker,current_user;
 
 int8_t Ignore(uint8_t *data);
 int8_t Screen_slove(uint8_t *data, Screen *Sc);
